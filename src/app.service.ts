@@ -33,7 +33,7 @@ export class AppService {
 
   private async puppeteerInit(): Promise<{ browser: Browser; page: Page }> {
     const browser = await puppeteer.launch({
-      headless: false,
+      // headless: false,
       defaultViewport: null
     });
     const page = await browser.newPage();
