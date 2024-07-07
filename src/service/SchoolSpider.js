@@ -35,7 +35,9 @@ export async function getCurrentSchoolScore(currentSchoolScoreList, schoolId, sc
 }
 
 async function selectOptions(selector, page) {
-  await page.click(selector);
+  await page.evaluate((selector) => {
+    document.querySelector(selector).click();
+  }, selector);
   await page.waitForSelector(dropdownSelector, {visible: true});
   return await page.$$(dropdownSelector);
 }

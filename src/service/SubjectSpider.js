@@ -2,7 +2,7 @@ const citySelector = '#scoreline > div > div.flex-scx.mb20 > div > div:nth-child
 const yearSelector = '#scoreline > div > div.flex-scx.mb20 > div > div:nth-child(2)';
 const wenliSelector = '#scoreline > div > div.flex-scx.mb20 > div > div:nth-child(3)';
 const piciSelector = '#scoreline > div > div.flex-scx.mb20 > div > div:nth-child(4)';
-const schoolTableSelector = '#scoreline > div > div:nth-child(2) > div > table';
+const subjectTableSelector = '#scoreline > div > div:nth-child(2) > div > table';
 const dropdownSelector = '.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-dropdown-menu-item';
 const pageSelector = '#scoreline > div > div.laypage > div > ul > li.ant-pagination-next';
 const timeoutSelector = 300
@@ -42,7 +42,9 @@ export async function getCurrentSubjectScore(currentSubjectScoreList, schoolId, 
 }
 
 async function selectOptions(selector, page) {
-  await page.click(selector);
+  await page.evaluate((selector) => {
+    document.querySelector(selector).click();
+  }, selector);
   await page.waitForSelector(dropdownSelector, {visible: true});
   return await page.$$(dropdownSelector);
 }
@@ -51,7 +53,7 @@ async function getCurrentSubjectScoreBySelector(page) {
   let results = [];
 
   while (true) {
-    const currentPageData = await page.$eval(schoolTableSelector, table => {
+    const currentPageData = await page.$eval(subjectTableSelector, table => {
       return Array.from(table.querySelectorAll('tbody > tr')).map(row => {
         const columns = row.querySelectorAll('td');
         return {
@@ -65,14 +67,15 @@ async function getCurrentSubjectScoreBySelector(page) {
     results = results.concat(currentPageData);
     const nextPageExists = await page.evaluate((pageSelector) => {
       const nextPageButton = document.querySelector(pageSelector);
-      return nextPageButton && !nextPageButton.ariaDisabled;
+      return nextPageButton?.ariaDisabled === 'false';
     }, pageSelector);
     if (!nextPageExists) {
       break;
     }
 
     await page.click(pageSelector);
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    // await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await new Promise(resolve => setTimeout(resolve, timeoutSelector));
   }
   return results;
 }
