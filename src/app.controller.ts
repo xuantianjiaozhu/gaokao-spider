@@ -5,8 +5,13 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('start-spider')
-  async startSpider() {
+  @Get('school-spider')
+  async schoolSpider() {
     await this.appService.getSchoolScoreService();
+  }
+
+  @Get('subject-spider')
+  async subjectSpider() {
+    await this.appService.getSubjectScoreService();
   }
 }

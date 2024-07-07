@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import {SchoolScore} from "./entity/SchoolScore";
+import {SubjectScore} from "./entity/SubjectScore";
 import {TypeOrmModule} from "@nestjs/typeorm";
 
 @Module({
@@ -15,7 +16,7 @@ import {TypeOrmModule} from "@nestjs/typeorm";
       database: 'crm',
       synchronize: true,
       logging: true,
-      entities: [SchoolScore],
+      entities: [SchoolScore, SubjectScore],
       poolSize: 10,
       connectorPackage: 'mysql2',
       extra: {

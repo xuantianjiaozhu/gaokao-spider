@@ -4,7 +4,7 @@ const wenliSelector = '#scoreline > div > div.flex-scx.mb20 > div > div:nth-chil
 const piciSelector = '#scoreline > div > div.flex-scx.mb20 > div > div:nth-child(4)';
 const schoolTableSelector = '#scoreline > div > div:nth-child(2) > div > table';
 const dropdownSelector = '.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-dropdown-menu-item';
-// const '#scoreline > div > div.laypage > div';
+const pageSelector = '#scoreline > div > div.laypage > div > ul > li.ant-pagination-next';
 const timeoutSelector = 300
 
 export async function getCurrentSubjectScore(currentSubjectScoreList, schoolId, schoolName, page) {
@@ -48,15 +48,31 @@ async function selectOptions(selector, page) {
 }
 
 async function getCurrentSubjectScoreBySelector(page) {
-  return await page.$eval(schoolTableSelector, table => {
-    return Array.from(table.querySelectorAll('tbody > tr')).map(row => {
-      const columns = row.querySelectorAll('td');
-      return {
-        subjectName: columns[0].textContent.trim(),
-        admissionBatch: columns[1].textContent.trim(),
-        minScorePosition: columns[3].textContent.trim(),
-        subjectRequirements: columns[4]?.textContent.trim()
-      }
+  let results = [];
+
+  while (true) {
+    const currentPageData = await page.$eval(schoolTableSelector, table => {
+      return Array.from(table.querySelectorAll('tbody > tr')).map(row => {
+        const columns = row.querySelectorAll('td');
+        return {
+          subjectName: columns[0].textContent.trim(),
+          admissionBatch: columns[1].textContent.trim(),
+          minScorePosition: columns[3].textContent.trim(),
+          subjectRequirements: columns[4]?.textContent.trim()
+        };
+      });
     });
-  });
+    results = results.concat(currentPageData);
+    const nextPageExists = await page.evaluate((pageSelector) => {
+      const nextPageButton = document.querySelector(pageSelector);
+      return nextPageButton && !nextPageButton.ariaDisabled;
+    }, pageSelector);
+    if (!nextPageExists) {
+      break;
+    }
+
+    await page.click(pageSelector);
+    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+  }
+  return results;
 }
