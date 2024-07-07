@@ -14,4 +14,9 @@ export class AppController {
   async subjectSpider() {
     await this.appService.getSubjectScoreService();
   }
+
+  @Get('enrollment-spider')
+  async enrollmentSpider() {
+    await this.appService.getEnrollmentPlanService();
+  }
 }
