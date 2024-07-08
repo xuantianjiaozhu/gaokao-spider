@@ -16,7 +16,7 @@ import { EnrollmentPlan } from './entity/EnrollmentPlan';
       password: '123456',
       database: 'gaokao',
       synchronize: true,
-      logging: true,
+      logging: false,
       entities: [SchoolScore, SubjectScore, EnrollmentPlan],
       poolSize: 10,
       connectorPackage: 'mysql2',
