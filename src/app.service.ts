@@ -61,6 +61,7 @@ export class AppService {
       const workerData = {
         schoolMappingForWorker,
         f,
+        logFilePath,
       };
       const worker = new Worker(workerScript);
       worker.postMessage(workerData);
