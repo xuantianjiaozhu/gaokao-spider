@@ -35,6 +35,11 @@ export class AppService {
     const rangeSize = 1000; // 每个 worker 处理 1000 个 schoolId
     let startId = 1;
 
+    const logFilePath = path.join(__dirname, `../src/log/${f}`);
+    if (!fs.existsSync(logFilePath)) {
+      fs.mkdirSync(logFilePath, { recursive: true });
+    }
+
     // schoolId < 3800
     while (startId < 3800) {
       const endId = startId + rangeSize - 1;
@@ -64,24 +69,29 @@ export class AppService {
           this.entityManager.create(entityType, score),
         );
         await this.entityManager.save(entities);
-        // 打开 `${__dirname}/log/${f}/${school.schoolId // 100}` 文件
-        const logFilePath = path.join(__dirname, `../src/log/${f}`);
-        if (!fs.existsSync(logFilePath)) {
-          fs.mkdirSync(logFilePath, { recursive: true });
-        }
+        // 写 `${__dirname}/log/${f}/${school.schoolId // 100}.txt` 文件
         fs.appendFileSync(
           logFilePath + `/${Math.floor(e.schoolId / 100)}.txt`,
-          `${e.schoolName} ${f} 成功爬取\n`,
+          `${e.schoolName} ${e.schoolId} ${f} 成功爬取\n`,
         );
       });
       worker.on('error', (error) => {
-        console.error('Worker error:', error);
+        fs.appendFileSync(
+          logFilePath + '/error.txt',
+          `Worker error: ${error}\n`,
+        );
       });
       worker.on('exit', (code) => {
         if (code !== 0) {
-          console.error(`Worker stopped with exit code ${code}`);
+          fs.appendFileSync(
+            logFilePath + '/error.txt',
+            `Worker stopped with exit code ${code}`,
+          );
         } else {
-          console.log('Worker exited successfully');
+          fs.appendFileSync(
+            logFilePath + '/error.txt',
+            'Worker exited successfully',
+          );
         }
       });
       workers.push(worker);
