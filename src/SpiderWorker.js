@@ -28,9 +28,9 @@ async function fetchSchoolDataRange(schoolMappingForWorker, f, logFilePath) {
       await f(currentList, schoolId, schoolName, page);
       parentPort.postMessage({ currentList, schoolId, schoolName });
     } catch (e) {
-      fs.writeFileSync(
+      fs.appendFileSync(
         logFilePath + '/error.txt',
-        `Error: ${schoolId} ${schoolName} ${f.name}. Exception: ${e}`,
+        `Error: ${schoolId} ${schoolName} ${f.name}. Exception: ${e}\n`,
       );
     }
   }

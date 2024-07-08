@@ -86,12 +86,12 @@ export class AppService {
         if (code !== 0) {
           fs.appendFileSync(
             logFilePath + '/error.txt',
-            `Worker stopped with exit code ${code}`,
+            `Worker stopped with exit code ${code}\n`,
           );
         } else {
           fs.appendFileSync(
             logFilePath + '/error.txt',
-            'Worker exited successfully',
+            'Worker exited successfully\n',
           );
         }
       });
