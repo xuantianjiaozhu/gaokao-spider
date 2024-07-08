@@ -1,1 +1,6 @@
-export async function getCurrentEnrollmentPlan(currentEnrollmentPlanList, schoolId, schoolName, page): Promise<void>;
+export async function getCurrentEnrollmentPlan(
+  currentEnrollmentPlanList,
+  schoolId,
+  schoolName,
+  page,
+): Promise<void>;

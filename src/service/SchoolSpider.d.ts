@@ -1,1 +1,6 @@
-export async function getCurrentSchoolScore(currentSchoolScoreList, schoolId, schoolName, page): Promise<void>;
+export async function getCurrentSchoolScore(
+  currentSchoolScoreList,
+  schoolId,
+  schoolName,
+  page,
+): Promise<void>;

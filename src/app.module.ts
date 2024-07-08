@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import {SchoolScore} from "./entity/SchoolScore";
-import {SubjectScore} from "./entity/SubjectScore";
-import {TypeOrmModule} from "@nestjs/typeorm";
-import {EnrollmentPlan} from "./entity/EnrollmentPlan";
+import { SchoolScore } from './entity/SchoolScore';
+import { SubjectScore } from './entity/SubjectScore';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { EnrollmentPlan } from './entity/EnrollmentPlan';
 
 @Module({
   imports: [
