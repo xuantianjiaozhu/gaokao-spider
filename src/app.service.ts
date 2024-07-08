@@ -32,7 +32,7 @@ export class AppService {
     const schoolMapping = AppService.getSchoolMapping();
     const workerScript = path.join(__dirname, 'SpiderWorker.js');
     const workers: Worker[] = [];
-    const rangeSize = 1000; // 每个 worker 处理 1000 个 schoolId
+    const rangeSize = 500; // 每个 worker 处理 500 个 schoolId
     let startId = 1;
 
     const logFilePath = path.join(__dirname, `../src/log/${f}`);
@@ -66,10 +66,17 @@ export class AppService {
       const worker = new Worker(workerScript);
       worker.postMessage(workerData);
       worker.on('message', async (e) => {
-        const entities = e.currentList.map((score) =>
-          this.entityManager.create(entityType, score),
-        );
-        await this.entityManager.save(entities);
+        try {
+          const entities = e.currentList.map((score) =>
+            this.entityManager.create(entityType, score),
+          );
+          await this.entityManager.save(entities);
+        } catch (e) {
+          fs.appendFileSync(
+            logFilePath + '/error.txt',
+            `Error: ${e.schoolName} ${e.schoolId} ${f}: ${e}\n`,
+          );
+        }
         // 写 `${__dirname}/log/${f}/${school.schoolId // 100}.txt` 文件
         fs.appendFileSync(
           logFilePath + `/${Math.floor(e.schoolId / 100)}.txt`,

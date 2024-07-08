@@ -26,7 +26,7 @@ export class SubjectScore {
 
   @Column({
     name: 'subject_name',
-    length: 255,
+    length: 1024,
     comment: '专业名称',
     nullable: true,
   })
