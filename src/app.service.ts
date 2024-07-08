@@ -32,32 +32,42 @@ export class AppService {
     const schoolMapping = AppService.getSchoolMapping();
     const workerScript = path.join(__dirname, 'SpiderWorker.js');
     const workers: Worker[] = [];
-    const rangeSize = 500; // 每个 worker 处理 500 个 schoolId
-    let startId = 1;
 
     const logFilePath = path.join(__dirname, `../src/log/${f}`);
     if (!fs.existsSync(logFilePath)) {
       fs.mkdirSync(logFilePath, { recursive: true });
     }
 
-    // schoolId < 3800
-    while (startId < 3800) {
-      const endId = startId + rangeSize - 1;
+    const schoolNames = Object.values(schoolMapping);
+    const counts: { schoolName: string; count: string }[] =
+      await this.entityManager
+        .getRepository(entityType)
+        .createQueryBuilder('s')
+        .select('s.school_name', 'schoolName')
+        .addSelect('COUNT(s.id)', 'count')
+        .where('s.school_name IN (:...schoolNames)', { schoolNames })
+        .groupBy('s.school_name')
+        .getRawMany();
+    // schoolMapping 里去掉 counts
+    counts.forEach(({ schoolName }) => {
+      const schoolId = Object.keys(schoolMapping).find(
+        (id) => schoolMapping[id] === schoolName,
+      );
+      if (schoolId) {
+        delete schoolMapping[schoolId.toString()];
+      }
+    });
+
+    // f = 0 用 2 个工作线程，f = 1 或 2 用 10 个工作线程
+    // schoolMapping 里的数据按工作线程编号取模分配
+    const workerNum = f === 0 ? 2 : 10;
+    for (let i = 0; i < workerNum; i++) {
       const schoolMappingForWorker: SchoolMapping = {};
-      for (let schoolId = startId; schoolId <= endId; schoolId++) {
-        if (!schoolMapping.hasOwnProperty(schoolId.toString())) continue;
-        const schoolName = schoolMapping[schoolId.toString()];
-        // 查找数据库的表中是否有 schoolName 的数据，如果有就跳过
-        const count = await this.entityManager
-          .getRepository(entityType)
-          .createQueryBuilder('s')
-          .where('s.schoolName = :schoolName', { schoolName })
-          .getCount();
-        if (count === 0) {
-          schoolMappingForWorker[schoolId.toString()] = schoolName;
+      for (const [schoolId, schoolName] of Object.entries(schoolMapping)) {
+        if (parseInt(schoolId) % workerNum === i) {
+          schoolMappingForWorker[schoolId] = schoolName;
         }
       }
-      // schoolMappingForWorker = { '1541': '昌吉职业技术学院' } as SchoolMapping;
       const workerData = {
         schoolMappingForWorker,
         f,
@@ -103,7 +113,6 @@ export class AppService {
         }
       });
       workers.push(worker);
-      startId += rangeSize;
     }
 
     // Optionally wait for all workers to finish
