@@ -4,6 +4,8 @@ import * as fs from 'fs';
 import * as path from 'node:path';
 import { Worker } from 'worker_threads';
 
+declare const __dirname: string;
+
 @Injectable()
 export class AppService {
   @Inject(EntityManager)
@@ -28,9 +30,9 @@ export class AppService {
   public async spiderService(entityType, f: number): Promise<void> {
     // 从 school_code.json 文件读取，结构为 {"number":{"school_id", "name"}}，只要 "school_id" 和 "name"
     const schoolMapping = AppService.getSchoolMapping();
-    const workerScript = path.join(__dirname, 'service/SchoolWorker.js');
+    const workerScript = path.join(__dirname, 'service/SpiderWorker.js');
     const workers: Worker[] = [];
-    const rangeSize = 100; // 每个 worker 处理 100 个 schoolId
+    const rangeSize = 1000; // 每个 worker 处理 1000 个 schoolId
     let startId = 1;
 
     // schoolId < 3800
@@ -63,14 +65,14 @@ export class AppService {
         );
         await this.entityManager.save(entities);
         // 打开 `${__dirname}/log/${f}/${school.schoolId // 100}` 文件
-        const logFilePath = path.join(
-          __dirname,
-          `log/${f}/${Math.floor(e.schoolId / 100)}`,
-        );
+        const logFilePath = path.join(__dirname, `../src/log/${f}`);
         if (!fs.existsSync(logFilePath)) {
           fs.mkdirSync(logFilePath, { recursive: true });
         }
-        fs.appendFileSync(logFilePath, `${e.schoolName} ${f} 成功爬取\n`);
+        fs.appendFileSync(
+          logFilePath + `/${Math.floor(e.schoolId / 100)}.txt`,
+          `${e.schoolName} ${f} 成功爬取\n`,
+        );
       });
       worker.on('error', (error) => {
         console.error('Worker error:', error);
