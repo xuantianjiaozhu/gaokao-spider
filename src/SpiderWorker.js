@@ -23,8 +23,8 @@ async function fetchSchoolDataRange(schoolMappingForWorker, f, logFilePath) {
   for (const [schoolId, schoolName] of Object.entries(schoolMappingForWorker)) {
     const currentList = [];
     const url = `https://www.gaokao.cn/school/${schoolId}/provinceline`;
-    await page.goto(url);
     try {
+      await page.goto(url);
       await f(currentList, schoolId, schoolName, page);
       parentPort.postMessage({ currentList, schoolId, schoolName });
     } catch (e) {

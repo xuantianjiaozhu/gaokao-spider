@@ -32,7 +32,7 @@ export class AppService {
     const schoolMapping = AppService.getSchoolMapping();
     const workerScript = path.join(__dirname, 'SpiderWorker.js');
     const workers: Worker[] = [];
-    const rangeSize = 500; // 每个 worker 处理 500 个 schoolId
+    const rangeSize = 250; // 每个 worker 处理 250 个 schoolId
     let startId = 1;
 
     const logFilePath = path.join(__dirname, `../src/log/${f}`);
