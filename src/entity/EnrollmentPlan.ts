@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class EnrollmentPlan {
@@ -8,6 +8,7 @@ export class EnrollmentPlan {
   @Column({ name: 'school_id', comment: '学校的编号（url 里的）' })
   schoolId: number;
 
+  @Index()
   @Column({ name: 'school_name', length: 255, comment: '学校名称' })
   schoolName: string;
 
@@ -23,10 +24,20 @@ export class EnrollmentPlan {
   @Column({ name: 'pici', length: 255, comment: '批次' })
   pici: string;
 
-  @Column({ name: 'subject_name', length: 255, comment: '专业名称', nullable: true })
+  @Column({
+    name: 'subject_name',
+    length: 255,
+    comment: '专业名称',
+    nullable: true,
+  })
   subjectName: string;
 
-  @Column({ name: 'enrollment_number', length: 255, comment: '计划招生', nullable: true })
+  @Column({
+    name: 'enrollment_number',
+    length: 255,
+    comment: '计划招生',
+    nullable: true,
+  })
   enrollmentNumber: string;
 
   @Column({ name: 'study_year', length: 255, comment: '学制', nullable: true })
@@ -35,6 +46,11 @@ export class EnrollmentPlan {
   @Column({ name: 'tuition', length: 255, comment: '学费', nullable: true })
   tuition: string;
 
-  @Column({ name: 'subject_requirements', length: 255, comment: '选科要求', nullable: true })
+  @Column({
+    name: 'subject_requirements',
+    length: 255,
+    comment: '选科要求',
+    nullable: true,
+  })
   subjectRequirements: string;
 }

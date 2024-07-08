@@ -8,7 +8,6 @@ import { getCurrentSubjectScore } from './service/SubjectSpider';
 import { SubjectScore } from './entity/SubjectScore';
 import { getCurrentEnrollmentPlan } from './service/EnrollmentSpider';
 import { EnrollmentPlan } from './entity/EnrollmentPlan';
-import { getCurrentSchoolInfo } from './service/SchoolInfoSpider';
 
 @Injectable()
 export class AppService {
@@ -22,6 +21,17 @@ export class AppService {
     const { browser, page } = await this.puppeteerInit();
 
     for (const [schoolId, schoolName] of Object.entries(schoolMapping)) {
+      // 查找数据库的表中是否有 schoolName 的数据，如果有就跳过
+      const count = await this.entityManager
+        .getRepository(SchoolScore)
+        .createQueryBuilder('s')
+        .where('s.schoolName = :schoolName', { schoolName })
+        .getCount();
+      if (count > 0) {
+        console.log(`${schoolName} (${schoolId}) 数据已存在，跳过爬取。`);
+        continue;
+      }
+
       const currentSchoolScoreList = [];
       const url = `https://www.gaokao.cn/school/${schoolId}/provinceline`;
       await page.goto(url);
@@ -47,6 +57,17 @@ export class AppService {
     const { browser, page } = await this.puppeteerInit();
 
     for (const [schoolId, schoolName] of Object.entries(schoolMapping)) {
+      // 查找数据库的表中是否有 schoolName 的数据，如果有就跳过
+      const count = await this.entityManager
+        .getRepository(SchoolScore)
+        .createQueryBuilder('s')
+        .where('s.schoolName = :schoolName', { schoolName })
+        .getCount();
+      if (count > 0) {
+        console.log(`${schoolName} (${schoolId}) 数据已存在，跳过爬取。`);
+        continue;
+      }
+
       const currentSubjectScoreList = [];
       const url = `https://www.gaokao.cn/school/${schoolId}/provinceline`;
       await page.goto(url);
@@ -72,6 +93,17 @@ export class AppService {
     const { browser, page } = await this.puppeteerInit();
 
     for (const [schoolId, schoolName] of Object.entries(schoolMapping)) {
+      // 查找数据库的表中是否有 schoolName 的数据，如果有就跳过
+      const count = await this.entityManager
+        .getRepository(SchoolScore)
+        .createQueryBuilder('s')
+        .where('s.schoolName = :schoolName', { schoolName })
+        .getCount();
+      if (count > 0) {
+        console.log(`${schoolName} (${schoolId}) 数据已存在，跳过爬取。`);
+        continue;
+      }
+
       const currentEnrollmentPlanList = [];
       const url = `https://www.gaokao.cn/school/${schoolId}/provinceline`;
       await page.goto(url);
@@ -131,19 +163,15 @@ export class AppService {
     );
     const schoolCode: { [key: string]: SchoolData } =
       JSON.parse(schoolCodeString);
-    let schoolMapping: SchoolMapping = Object.entries(
-      schoolCode,
-    ).reduce<SchoolMapping>((acc, [number, { school_id, name }]) => {
-      acc[school_id] = name;
-      return acc;
-    }, {});
-    schoolMapping = { '1541': '昌吉职业技术学院' };
+    // schoolMapping = { '1541': '昌吉职业技术学院' };
     // schoolMapping = {'109': '东南大学'};
-    // schoolMapping 中 school_id < 47 的去掉
-    // for (let i = 1; i < 47; i++) {
-    //   delete schoolMapping[i.toString()];
-    // }
-    return schoolMapping;
+    return Object.entries(schoolCode).reduce<SchoolMapping>(
+      (acc, [, { school_id, name }]) => {
+        acc[school_id] = name;
+        return acc;
+      },
+      {},
+    );
   }
 }
 
