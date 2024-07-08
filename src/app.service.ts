@@ -30,7 +30,7 @@ export class AppService {
   public async spiderService(entityType, f: number): Promise<void> {
     // 从 school_code.json 文件读取，结构为 {"number":{"school_id", "name"}}，只要 "school_id" 和 "name"
     const schoolMapping = AppService.getSchoolMapping();
-    const workerScript = path.join(__dirname, 'service/SpiderWorker.js');
+    const workerScript = path.join(__dirname, 'SpiderWorker.js');
     const workers: Worker[] = [];
     const rangeSize = 1000; // 每个 worker 处理 1000 个 schoolId
     let startId = 1;

@@ -1,8 +1,8 @@
 import { parentPort } from 'node:worker_threads';
 import { launch } from 'puppeteer';
-import { getCurrentSchoolScore } from './SchoolSpider';
-import { getCurrentSubjectScore } from './SubjectSpider';
-import { getCurrentEnrollmentPlan } from './EnrollmentSpider';
+import { getCurrentSchoolScore } from './service/SchoolSpider';
+import { getCurrentSubjectScore } from './service/SubjectSpider';
+import { getCurrentEnrollmentPlan } from './service/EnrollmentSpider';
 import * as fs from 'node:fs';
 import path from 'node:path';
 
