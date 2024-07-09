@@ -81,10 +81,10 @@ export class AppService {
             this.entityManager.create(entityType, score),
           );
           await this.entityManager.save(entities);
-        } catch (e) {
+        } catch (error) {
           fs.appendFileSync(
             logFilePath + '/error.txt',
-            `Error: ${e.schoolName} ${e.schoolId} ${f}: ${e}\n`,
+            `Error: ${e.schoolName} ${e.schoolId} ${f}: ${error}\n`,
           );
         }
         // 写 `${__dirname}/log/${f}/${school.schoolId // 100}.txt` 文件
