@@ -59,9 +59,9 @@ export class AppService {
 
     // f = 0 用 2 个工作线程，f = 1 或 2 用 10 个工作线程
     // schoolMapping 里的数据按工作线程编号取模分配
-    const workerNum = f === 2 ? 2 : 1;
+    const workerNum = 8;
     for (let i = 0; i < workerNum; i++) {
-      let schoolMappingForWorker: SchoolMapping = {};
+      const schoolMappingForWorker: SchoolMapping = {};
       for (const [schoolId, schoolName] of Object.entries(schoolMapping)) {
         if (parseInt(schoolId) % workerNum === i) {
           schoolMappingForWorker[schoolId] = schoolName;
@@ -69,11 +69,6 @@ export class AppService {
       }
       if (Object.keys(schoolMappingForWorker).length === 0) {
         continue;
-      }
-      if (f === 0) {
-        schoolMappingForWorker = {
-          '480': '西北民族大学',
-        };
       }
       const workerData = {
         schoolMappingForWorker,
