@@ -31,10 +31,15 @@ export async function getCurrentSchoolInfo(schoolId, schoolName, page) {
   const detailUrl = `https://www.gaokao.cn/school/${schoolId}/introDetails`;
   await page.goto(detailUrl);
   await page.waitForSelector(detailSelector);
-  const detail = await page.evaluate(
-    (detailSelector) => document.querySelector(detailSelector).innerText,
-    detailSelector,
-  );
+  let detail;
+  try {
+    detail = await page.evaluate(
+      (detailSelector) => document.querySelector(detailSelector).innerText,
+      detailSelector,
+    );
+  } catch (e) {
+    detail = null;
+  }
 
   return {
     schoolId,

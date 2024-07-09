@@ -61,7 +61,7 @@ export class AppService {
     // schoolMapping 里的数据按工作线程编号取模分配
     const workerNum = f === 2 ? 20 : 1;
     for (let i = 0; i < workerNum; i++) {
-      const schoolMappingForWorker: SchoolMapping = {};
+      let schoolMappingForWorker: SchoolMapping = {};
       for (const [schoolId, schoolName] of Object.entries(schoolMapping)) {
         if (parseInt(schoolId) % workerNum === i) {
           schoolMappingForWorker[schoolId] = schoolName;
@@ -69,6 +69,28 @@ export class AppService {
       }
       if (Object.keys(schoolMappingForWorker).length === 0) {
         continue;
+      }
+      if (f === 0) {
+        schoolMappingForWorker = {
+          '473': '福建师范大学',
+          '480': '西北民族大学',
+          '953': '江西航空职业技术学院',
+          '976': '广东工商职业技术大学',
+          '1196': '安徽中医药大学',
+          '1340': '山西老区职业技术学院',
+          '1601': '天津仁爱学院',
+          '1969': '湖北汽车工业学院科技学院',
+        };
+      } else if (f === 1) {
+        schoolMappingForWorker = {
+          '217': '沈阳理工大学',
+          '379': '长春理工大学',
+          '792': '广安职业技术学院',
+          '975': '潮汕职业技术学院',
+          '1265': '西安医学院',
+          '1391': '海口经济学院',
+          '2354': '大连航运职业技术学院',
+        };
       }
       const workerData = {
         schoolMappingForWorker,
