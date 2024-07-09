@@ -59,7 +59,7 @@ export class AppService {
 
     // f = 0 用 2 个工作线程，f = 1 或 2 用 10 个工作线程
     // schoolMapping 里的数据按工作线程编号取模分配
-    const workerNum = f === 0 ? 2 : 10;
+    const workerNum = f === 2 ? 20 : 1;
     for (let i = 0; i < workerNum; i++) {
       const schoolMappingForWorker: SchoolMapping = {};
       for (const [schoolId, schoolName] of Object.entries(schoolMapping)) {
