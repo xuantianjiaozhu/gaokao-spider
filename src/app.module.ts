@@ -5,6 +5,7 @@ import { SchoolScore } from './entity/SchoolScore';
 import { SubjectScore } from './entity/SubjectScore';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EnrollmentPlan } from './entity/EnrollmentPlan';
+import { SchoolInfo } from './entity/SchoolInfo';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { EnrollmentPlan } from './entity/EnrollmentPlan';
       database: 'gaokao',
       synchronize: true,
       logging: false,
-      entities: [SchoolScore, SubjectScore, EnrollmentPlan],
+      entities: [SchoolScore, SubjectScore, EnrollmentPlan, SchoolInfo],
       poolSize: 10,
       connectorPackage: 'mysql2',
       extra: {

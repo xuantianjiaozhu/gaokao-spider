@@ -37,4 +37,9 @@ export class AppController {
       this.functionMapping[2].f,
     );
   }
+
+  @Get('school-info-spider')
+  async schoolInfoSpider() {
+    await this.appService.getSchoolInfoService();
+  }
 }
