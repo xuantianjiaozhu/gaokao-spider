@@ -30,9 +30,9 @@ export async function getCurrentSchoolInfo(schoolId, schoolName, page) {
   );
   const detailUrl = `https://www.gaokao.cn/school/${schoolId}/introDetails`;
   await page.goto(detailUrl);
-  await page.waitForSelector(detailSelector);
   let detail;
   try {
+    await page.waitForSelector(detailSelector);
     detail = await page.evaluate(
       (detailSelector) => document.querySelector(detailSelector).innerText,
       detailSelector,
