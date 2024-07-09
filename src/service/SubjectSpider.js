@@ -25,6 +25,9 @@ export async function getCurrentSubjectScore(
   for (const cityOption of cityOptions) {
     await cityOption.evaluate((b) => b.click());
     const city = await cityOption.evaluate((b) => b.textContent);
+    if (city === '省份' && cityOptions.length <= 1) {
+      return;
+    }
     await new Promise((resolve) => setTimeout(resolve, timeoutSelector));
     const yearOptions = await selectOptions(yearSelector, page);
     for (const yearOption of yearOptions) {

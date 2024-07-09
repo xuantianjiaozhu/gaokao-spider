@@ -26,7 +26,14 @@ async function fetchSchoolDataRange(schoolMappingForWorker, f, logFilePath) {
     try {
       await page.goto(url);
       await f(currentList, schoolId, schoolName, page);
-      parentPort.postMessage({ currentList, schoolId, schoolName });
+      if (currentList.length > 0) {
+        parentPort.postMessage({ currentList, schoolId, schoolName });
+      } else {
+        fs.appendFileSync(
+          logFilePath + '/error.txt',
+          `Error: ${schoolId} ${schoolName} ${f.name}. No data.\n`,
+        );
+      }
     } catch (e) {
       fs.appendFileSync(
         logFilePath + '/error.txt',

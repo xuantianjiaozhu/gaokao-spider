@@ -68,6 +68,9 @@ export class AppService {
           schoolMappingForWorker[schoolId] = schoolName;
         }
       }
+      if (Object.keys(schoolMappingForWorker).length === 0) {
+        continue;
+      }
       const workerData = {
         schoolMappingForWorker,
         f,
