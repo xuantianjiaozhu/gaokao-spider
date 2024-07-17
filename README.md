@@ -1,4 +1,4 @@
-# gaokao
+# gaokao-spider
 
 gaokao.cn 的爬虫，最终会得到四张表，src/log 存放日志。使用 NestJS 作为后端框架，TypeORM 进行数据库操作。因为 JS 和 TS
 不太熟，有些地方写的不是很好，例如一些数据的硬编码而不是配置文件，日志也是硬编码了而不是像 Slf4j 那样。

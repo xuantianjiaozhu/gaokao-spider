@@ -22,12 +22,12 @@ export class SchoolScore {
   wenli: string;
 
   @Column({
-    name: 'admission_batch',
+    name: 'pici',
     length: 255,
     comment: '录取批次',
     nullable: true,
   })
-  admissionBatch: string;
+  pici: string;
 
   @Column({
     name: 'enrollment_type',

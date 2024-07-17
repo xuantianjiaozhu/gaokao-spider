@@ -21,9 +21,6 @@ export class SubjectScore {
   @Column({ name: 'wenli', length: 255, comment: '选科' })
   wenli: string;
 
-  @Column({ name: 'pici', length: 255, comment: '批次' })
-  pici: string;
-
   @Column({
     name: 'subject_name',
     length: 1024,
@@ -33,12 +30,12 @@ export class SubjectScore {
   subjectName: string;
 
   @Column({
-    name: 'admission_batch',
+    name: 'pici',
     length: 255,
     comment: '录取批次',
     nullable: true,
   })
-  admissionBatch: string;
+  pici: string;
 
   @Column({
     name: 'min_score_position',
