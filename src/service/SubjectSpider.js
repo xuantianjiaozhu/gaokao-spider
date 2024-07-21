@@ -82,7 +82,7 @@ async function getCurrentSubjectScoreBySelector(page) {
         return {
           subjectName: columns[0].textContent.trim(),
           admissionBatch: columns[1].textContent.trim(),
-          minScorePosition: columns[3].textContent.trim(),
+          minScorePosition: columns[2].textContent.trim(),
           subjectRequirements: columns[4]?.textContent.trim(),
         };
       });
